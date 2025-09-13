@@ -1,26 +1,220 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Modern color palette with better contrast and vibrancy */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    
+    /* Modern primary colors - #2563eb blue gradient */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Sophisticated secondary colors */
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    
+    /* Refined muted colors */
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    
+    /* Modern accent colors */
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    
+    /* Enhanced destructive colors */
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    
+    /* Subtle borders and inputs */
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 217 91% 60%;
+    
+    /* Modern border radius */
+    --radius: 0.75rem;
+    
+    /* Custom modern variables */
+    --gradient-primary: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(240 4.8% 95.9%) 0%, hsl(240 5.9% 90%) 100%);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    
+    /* Dark mode primary - brighter #2563eb blue for better contrast */
+    --primary: 217 91% 70%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Dark mode secondary */
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    
+    /* Dark mode muted */
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    
+    /* Dark mode accent */
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    
+    /* Dark mode destructive */
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    
+    /* Dark mode borders */
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 217 91% 70%;
+    
+    /* Dark mode custom variables */
+    --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+    --gradient-secondary: linear-gradient(135deg, hsl(240 3.7% 15.9%) 0%, hsl(240 5.9% 10%) 100%);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Modern scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+}
+
+@layer components {
+  /* Modern glass morphism effect */
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .dark .glass {
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Modern gradient backgrounds */
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-secondary {
+    background: var(--gradient-secondary);
+  }
+  
+  /* Enhanced shadows */
+  .shadow-modern {
+    box-shadow: var(--shadow-lg);
+  }
+  
+  .shadow-modern-sm {
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .shadow-modern-md {
+    box-shadow: var(--shadow-md);
+  }
+  
+  .shadow-modern-xl {
+    box-shadow: var(--shadow-xl);
+  }
+  
+  /* Modern card hover effects */
+  .card-hover {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+  }
+  
+  /* Modern button styles */
+  .btn-modern {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .btn-modern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+  }
+  
+  .btn-modern:hover::before {
+    left: 100%;
+  }
+  
+  /* Modern input focus effects */
+  .input-modern:focus {
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.1);
+    border-color: hsl(var(--ring));
+  }
+  
+  /* Modern sidebar styling */
+  .sidebar-modern {
+    background: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--muted) / 0.3) 100%);
+    border-right: 1px solid hsl(var(--border));
+  }
+  
+  /* Modern header styling */
+  .header-modern {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid hsl(var(--border));
+  }
+  
+  .dark .header-modern {
+    background: rgba(0, 0, 0, 0.8);
+  }
 }
