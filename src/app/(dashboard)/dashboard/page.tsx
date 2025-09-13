@@ -7,25 +7,27 @@ import { RecentActivityCard } from "@/components/dashboard/recent-activity-card"
 
 export default function DashboardPage() {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600">
+    <div className="space-y-6 p-6">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold gradient-primary bg-clip-text text-transparent">
+          Dashboard
+        </h1>
+        <p className="text-muted-foreground">
           Welcome back! Here's what's happening with your campaigns.
         </p>
       </div>
 
       <QuickActionsBar />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <AffiliatePerformanceCard />
+        <RecentActivityCard />
         <CompanyProfileCard />
-        <ActiveCampaignsCard />
-        <CreatorOutreachCard />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <AffiliatePerformanceCard />
-        <RecentActivityCard />
+        <ActiveCampaignsCard />
+        <CreatorOutreachCard />
       </div>
     </div>
   );

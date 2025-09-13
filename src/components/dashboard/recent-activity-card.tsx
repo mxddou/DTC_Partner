@@ -69,49 +69,58 @@ const getActivityIcon = (type: string) => {
 const getActivityColor = (type: string) => {
   switch (type) {
     case "application":
-      return "bg-blue-100 text-blue-800";
+      return "bg-blue-100 text-blue-800 border-blue-200";
     case "message":
-      return "bg-green-100 text-green-800";
+      return "bg-green-100 text-green-800 border-green-200";
     case "approval":
-      return "bg-purple-100 text-purple-800";
+      return "bg-purple-100 text-purple-800 border-purple-200";
     case "delivery":
-      return "bg-orange-100 text-orange-800";
+      return "bg-orange-100 text-orange-800 border-orange-200";
     default:
-      return "bg-gray-100 text-gray-800";
+      return "bg-gray-100 text-gray-800 border-gray-200";
   }
 };
 
 export function RecentActivityCard() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Activity className="h-5 w-5" />
-          Recent Activity
-        </CardTitle>
-        <CardDescription>
-          Latest updates from your campaigns and creators
-        </CardDescription>
+    <Card className="card-hover shadow-modern-sm border-border/50">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <div>
+          <CardTitle className="text-sm font-medium flex items-center gap-2">
+            <div className="w-2 h-2 gradient-primary rounded-full"></div>
+            Recent Activity
+          </CardTitle>
+          <CardDescription className="text-xs">
+            Latest updates from your campaigns and creators
+          </CardDescription>
+        </div>
+        <div className="p-2 gradient-secondary rounded-lg">
+          <Activity className="h-4 w-4 text-muted-foreground" />
+        </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {mockRecentActivity.map((activity) => (
-            <div key={activity.id} className="flex items-start gap-3">
-              <Avatar className="h-8 w-8">
+            <div key={activity.id} className="flex items-start gap-3 p-3 rounded-xl bg-gradient-to-r from-muted/30 to-muted/10 border border-border/30 hover:shadow-modern-sm transition-all duration-200">
+              <Avatar className="h-8 w-8 ring-2 ring-background">
                 <AvatarImage src={activity.avatar} alt={activity.user} />
-                <AvatarFallback>{activity.user.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="text-xs font-medium">{activity.user.charAt(0)}</AvatarFallback>
               </Avatar>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  {getActivityIcon(activity.type)}
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="p-1 rounded-full bg-background/50">
+                    {getActivityIcon(activity.type)}
+                  </div>
                   <span className="text-sm font-medium">{activity.user}</span>
                   <span className="text-sm text-muted-foreground">
                     {activity.action}
                   </span>
+                </div>
+                <div className="flex items-center gap-2 mb-1">
                   <Badge
                     variant="outline"
-                    className={getActivityColor(activity.type)}
+                    className={`text-xs ${getActivityColor(activity.type)}`}
                   >
                     {activity.target}
                   </Badge>

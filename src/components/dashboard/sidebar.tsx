@@ -29,9 +29,9 @@ export function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+    <div className="w-64 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-r border-border/50 flex flex-col shadow-modern-sm">
       <div className="p-6">
-        <h2 className="text-xl font-bold text-gray-900">Partner Hub</h2>
+        <h2 className="text-xl font-bold gradient-primary bg-clip-text text-transparent">Partner Hub</h2>
       </div>
 
       <nav className="flex-1 px-4 space-y-2">
@@ -42,8 +42,10 @@ export function DashboardSidebar() {
               <Button
                 variant={isActive ? "default" : "ghost"}
                 className={cn(
-                  "w-full justify-start gap-3",
-                  isActive && "bg-primary text-primary-foreground"
+                  "w-full justify-start gap-3 btn-modern transition-all duration-200",
+                  isActive 
+                    ? "gradient-primary text-white shadow-modern-sm" 
+                    : "hover:bg-primary/10 hover:text-primary hover:shadow-modern-sm"
                 )}
               >
                 <item.icon className="h-4 w-4" />
