@@ -1,11 +1,21 @@
 ---
-alwaysApply: false
+alwaysApply: true
 ---
-# Phase 1 – Frontend Development with Mock Data
 
-## Sprint 1 – Project Foundation & Setup
+# Partner Dashboard Frontend PRD
 
-### 1.1 Initialize Next.js Project
+## Project Overview
+
+**Project:** Partner Dashboard (Business/Brand Side)  
+**Purpose:** A comprehensive platform for businesses to manage creator partnerships, campaigns, and affiliate programs  
+**Target Stack:** Next.js 15, TailwindCSS, shadcn/ui, React Query, Framer Motion, Clerk Auth, Supabase
+
+## Phase 1 – Frontend Development with Mock Data
+
+### Sprint 1 – Project Foundation & Setup
+
+#### 1.1 Initialize Next.js Project
+
 ```bash
 # Create new Next.js project with TypeScript and App Router
 npx create-next-app@latest partner-dashboard --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
@@ -14,7 +24,8 @@ cd partner-dashboard
 
 **Cursor.ai Context:** Set up a modern Next.js 15 application with TypeScript, App Router, and organized project structure using src directory.
 
-### 1.2 Install Core Dependencies
+#### 1.2 Install Core Dependencies
+
 ```bash
 # UI and Design System
 npm install @radix-ui/react-slot @radix-ui/react-dialog @radix-ui/react-dropdown-menu
@@ -33,7 +44,8 @@ npm install -D @types/node @types/react @types/react-dom
 
 **Cursor.ai Context:** Install shadcn/ui dependencies manually for maximum control, React Query for state management, and Framer Motion for smooth animations.
 
-### 1.3 Configure shadcn/ui
+#### 1.3 Configure shadcn/ui
+
 ```bash
 # Initialize shadcn/ui
 npx shadcn-ui@latest init
@@ -45,7 +57,8 @@ npx shadcn-ui@latest add toast select badge avatar
 npx shadcn-ui@latest add sidebar navigation-menu
 ```
 
-**File: components.json**
+**File:** `components.json`
+
 ```json
 {
   "style": "default",
@@ -66,8 +79,10 @@ npx shadcn-ui@latest add sidebar navigation-menu
 
 **Cursor.ai Context:** Configure shadcn/ui with custom theme colors focusing on professional dashboard aesthetics.
 
-### 1.4 Setup Theme Configuration
-**File: src/app/globals.css**
+#### 1.4 Setup Theme Configuration
+
+**File:** `src/app/globals.css`
+
 ```css
 @tailwind base;
 @tailwind components;
@@ -95,26 +110,28 @@ npx shadcn-ui@latest add sidebar navigation-menu
 }
 ```
 
-### 1.5 Create Global Layout Structure
-**File: src/app/layout.tsx**
-```tsx
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import { Providers } from '@/components/providers'
-import { Toaster } from '@/components/ui/toaster'
+#### 1.5 Create Global Layout Structure
 
-const inter = Inter({ subsets: ['latin'] })
+**File:** `src/app/layout.tsx`
+
+```tsx
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { Providers } from "@/components/providers";
+import { Toaster } from "@/components/ui/toaster";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Partner Dashboard',
-  description: 'Manage your creator partnerships and campaigns',
-}
+  title: "Partner Dashboard",
+  description: "Manage your creator partnerships and campaigns",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en">
@@ -125,28 +142,32 @@ export default function RootLayout({
         </Providers>
       </body>
     </html>
-  )
+  );
 }
 ```
 
-**File: src/components/providers.tsx**
-```tsx
-'use client'
+**File:** `src/components/providers.tsx`
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThemeProvider } from '@/components/theme-provider'
-import { useState } from 'react'
+```tsx
+"use client";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ThemeProvider } from "@/components/theme-provider";
+import { useState } from "react";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 60 * 1000, // 1 minute
-        retry: 1,
-      },
-    },
-  }))
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 60 * 1000, // 1 minute
+            retry: 1,
+          },
+        },
+      })
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -160,18 +181,18 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <ReactQueryDevtools initialIsOpen={false} />
       </ThemeProvider>
     </QueryClientProvider>
-  )
+  );
 }
 ```
 
 **Cursor.ai Context:** Set up the foundational layout with React Query for state management and theme support.
 
----
+### Sprint 2 – Routing Structure & Navigation
 
-## Sprint 2 – Routing Structure & Navigation
+#### 2.1 Create App Router Structure
 
-### 2.1 Create App Router Structure
 Create the following directory structure:
+
 ```
 src/app/
 ├── dashboard/
@@ -193,73 +214,75 @@ src/app/
     └── page.tsx
 ```
 
-### 2.2 Main Dashboard Layout
-**File: src/app/(dashboard)/layout.tsx**
+#### 2.2 Main Dashboard Layout
+
+**File:** `src/app/(dashboard)/layout.tsx`
+
 ```tsx
-import { DashboardSidebar } from '@/components/dashboard/sidebar'
-import { DashboardHeader } from '@/components/dashboard/header'
+import { DashboardSidebar } from "@/components/dashboard/sidebar";
+import { DashboardHeader } from "@/components/dashboard/header";
 
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <div className="flex min-h-screen">
       <DashboardSidebar />
       <div className="flex-1 flex flex-col">
         <DashboardHeader />
-        <main className="flex-1 p-6 bg-gray-50">
-          {children}
-        </main>
+        <main className="flex-1 p-6 bg-gray-50">{children}</main>
       </div>
     </div>
-  )
+  );
 }
 ```
 
-### 2.3 Sidebar Navigation Component
-**File: src/components/dashboard/sidebar.tsx**
-```tsx
-'use client'
+#### 2.3 Sidebar Navigation Component
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
-import { 
-  LayoutDashboard, 
-  User, 
-  Campaign, 
-  Users, 
-  MessageSquare, 
+**File:** `src/components/dashboard/sidebar.tsx`
+
+```tsx
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  LayoutDashboard,
+  User,
+  Campaign,
+  Users,
+  MessageSquare,
   Settings,
-  TrendingUp
-} from 'lucide-react'
+  TrendingUp,
+} from "lucide-react";
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-  { name: 'Profile', href: '/profile', icon: User },
-  { name: 'Create Campaign', href: '/campaigns/create', icon: Campaign },
-  { name: 'CRM', href: '/campaigns/crm', icon: TrendingUp },
-  { name: 'Affiliate Manager', href: '/campaigns/affiliate', icon: TrendingUp },
-  { name: 'Creator Directory', href: '/directory', icon: Users },
-  { name: 'Messages', href: '/messages', icon: MessageSquare },
-  { name: 'Settings', href: '/settings', icon: Settings },
-]
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Profile", href: "/profile", icon: User },
+  { name: "Create Campaign", href: "/campaigns/create", icon: Campaign },
+  { name: "CRM", href: "/campaigns/crm", icon: TrendingUp },
+  { name: "Affiliate Manager", href: "/campaigns/affiliate", icon: TrendingUp },
+  { name: "Creator Directory", href: "/directory", icon: Users },
+  { name: "Messages", href: "/messages", icon: MessageSquare },
+  { name: "Settings", href: "/settings", icon: Settings },
+];
 
 export function DashboardSidebar() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
       <div className="p-6">
         <h2 className="text-xl font-bold text-gray-900">Partner Hub</h2>
       </div>
-      
+
       <nav className="flex-1 px-4 space-y-2">
         {navigation.map((item) => {
-          const isActive = pathname === item.href
+          const isActive = pathname === item.href;
           return (
             <Link key={item.href} href={item.href}>
               <Button
@@ -273,25 +296,27 @@ export function DashboardSidebar() {
                 {item.name}
               </Button>
             </Link>
-          )
+          );
         })}
       </nav>
     </div>
-  )
+  );
 }
 ```
 
 **Cursor.ai Context:** Create a responsive sidebar with active state management using Next.js App Router's usePathname hook.
 
-### 2.4 Dashboard Header Component
-**File: src/components/dashboard/header.tsx**
-```tsx
-'use client'
+#### 2.4 Dashboard Header Component
 
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { Bell, Search, Plus } from 'lucide-react'
+**File:** `src/components/dashboard/header.tsx`
+
+```tsx
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Bell, Search, Plus } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -299,7 +324,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 
 export function DashboardHeader() {
   return (
@@ -313,19 +338,19 @@ export function DashboardHeader() {
           />
         </div>
       </div>
-      
+
       <div className="flex items-center gap-4">
         <Button className="gap-2">
           <Plus className="h-4 w-4" />
           Quick Action
         </Button>
-        
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon" className="relative">
               <Bell className="h-4 w-4" />
-              <Badge 
-                variant="destructive" 
+              <Badge
+                variant="destructive"
                 className="absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 text-xs"
               >
                 3
@@ -338,94 +363,111 @@ export function DashboardHeader() {
             <DropdownMenuItem>
               <div className="flex flex-col gap-1">
                 <span className="font-medium">New application received</span>
-                <span className="text-sm text-gray-500">Summer Campaign 2024</span>
+                <span className="text-sm text-gray-500">
+                  Summer Campaign 2024
+                </span>
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
     </header>
-  )
+  );
 }
 ```
 
 **Cursor.ai Context:** Build a comprehensive header with search functionality, quick actions, and notification system.
 
----
+### Sprint 3 – Dashboard Home Page
 
-## Sprint 3 – Dashboard Home Page
+#### 3.1 Dashboard Overview Page
 
-### 3.1 Dashboard Overview Page
-**File: src/app/(dashboard)/dashboard/page.tsx**
+**File:** `src/app/(dashboard)/dashboard/page.tsx`
+
 ```tsx
-import { CompanyProfileCard } from '@/components/dashboard/company-profile-card'
-import { ActiveCampaignsCard } from '@/components/dashboard/active-campaigns-card'
-import { CreatorOutreachCard } from '@/components/dashboard/creator-outreach-card'
-import { AffiliatePerformanceCard } from '@/components/dashboard/affiliate-performance-card'
-import { QuickActionsBar } from '@/components/dashboard/quick-actions-bar'
-import { RecentActivityCard } from '@/components/dashboard/recent-activity-card'
+import { CompanyProfileCard } from "@/components/dashboard/company-profile-card";
+import { ActiveCampaignsCard } from "@/components/dashboard/active-campaigns-card";
+import { CreatorOutreachCard } from "@/components/dashboard/creator-outreach-card";
+import { AffiliatePerformanceCard } from "@/components/dashboard/affiliate-performance-card";
+import { QuickActionsBar } from "@/components/dashboard/quick-actions-bar";
+import { RecentActivityCard } from "@/components/dashboard/recent-activity-card";
 
 export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p className="text-gray-600">Welcome back! Here's what's happening with your campaigns.</p>
+        <p className="text-gray-600">
+          Welcome back! Here's what's happening with your campaigns.
+        </p>
       </div>
-      
+
       <QuickActionsBar />
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <CompanyProfileCard />
         <ActiveCampaignsCard />
         <CreatorOutreachCard />
       </div>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <AffiliatePerformanceCard />
         <RecentActivityCard />
       </div>
     </div>
-  )
+  );
 }
 ```
 
-### 3.2 Company Profile Completion Card
-**File: src/components/dashboard/company-profile-card.tsx**
-```tsx
-'use client'
+#### 3.2 Company Profile Completion Card
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-import { Building2, ArrowRight } from 'lucide-react'
-import Link from 'next/link'
+**File:** `src/components/dashboard/company-profile-card.tsx`
+
+```tsx
+"use client";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Building2, ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const mockProfileCompletion = {
   percentage: 75,
   completedSteps: 3,
   totalSteps: 4,
-  nextStep: 'Add brand assets'
-}
+  nextStep: "Add brand assets",
+};
 
 export function CompanyProfileCard() {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">Profile Completion</CardTitle>
+        <CardTitle className="text-sm font-medium">
+          Profile Completion
+        </CardTitle>
         <Building2 className="h-4 w-4 text-muted-foreground" />
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-bold">{mockProfileCompletion.percentage}%</span>
+            <span className="text-2xl font-bold">
+              {mockProfileCompletion.percentage}%
+            </span>
             <span className="text-sm text-muted-foreground">
-              {mockProfileCompletion.completedSteps}/{mockProfileCompletion.totalSteps} steps
+              {mockProfileCompletion.completedSteps}/
+              {mockProfileCompletion.totalSteps} steps
             </span>
           </div>
-          
+
           <Progress value={mockProfileCompletion.percentage} className="h-2" />
-          
+
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
               Next: {mockProfileCompletion.nextStep}
@@ -439,37 +481,45 @@ export function CompanyProfileCard() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 ```
 
-### 3.3 Active Campaigns Summary Card
-**File: src/components/dashboard/active-campaigns-card.tsx**
-```tsx
-'use client'
+#### 3.3 Active Campaigns Summary Card
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Campaign, Eye, Users } from 'lucide-react'
-import Link from 'next/link'
+**File:** `src/components/dashboard/active-campaigns-card.tsx`
+
+```tsx
+"use client";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Campaign, Eye, Users } from "lucide-react";
+import Link from "next/link";
 
 const mockActiveCampaigns = [
   {
     id: 1,
-    name: 'Summer Collection 2024',
-    status: 'active',
+    name: "Summer Collection 2024",
+    status: "active",
     applications: 24,
-    budget: '$5,000'
+    budget: "$5,000",
   },
   {
     id: 2,
-    name: 'Holiday Promotion',
-    status: 'draft',
+    name: "Holiday Promotion",
+    status: "draft",
     applications: 0,
-    budget: '$3,000'
-  }
-]
+    budget: "$3,000",
+  },
+];
 
 export function ActiveCampaignsCard() {
   return (
@@ -481,14 +531,21 @@ export function ActiveCampaignsCard() {
       <CardContent>
         <div className="space-y-3">
           <div className="text-2xl font-bold">{mockActiveCampaigns.length}</div>
-          
+
           <div className="space-y-2">
             {mockActiveCampaigns.map((campaign) => (
-              <div key={campaign.id} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
+              <div
+                key={campaign.id}
+                className="flex items-center justify-between p-2 rounded-lg bg-muted/50"
+              >
                 <div className="space-y-1">
                   <p className="text-sm font-medium">{campaign.name}</p>
                   <div className="flex items-center gap-2">
-                    <Badge variant={campaign.status === 'active' ? 'default' : 'secondary'}>
+                    <Badge
+                      variant={
+                        campaign.status === "active" ? "default" : "secondary"
+                      }
+                    >
                       {campaign.status}
                     </Badge>
                     <span className="text-xs text-muted-foreground flex items-center gap-1">
@@ -503,7 +560,7 @@ export function ActiveCampaignsCard() {
               </div>
             ))}
           </div>
-          
+
           <Link href="/campaigns/crm">
             <Button variant="outline" className="w-full">
               View All Campaigns
@@ -512,45 +569,47 @@ export function ActiveCampaignsCard() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }
 ```
 
-### 3.4 Quick Actions Bar Component
-**File: src/components/dashboard/quick-actions-bar.tsx**
-```tsx
-'use client'
+#### 3.4 Quick Actions Bar Component
 
-import { Button } from '@/components/ui/button'
-import { Plus, Search, MessageSquare, TrendingUp } from 'lucide-react'
-import Link from 'next/link'
+**File:** `src/components/dashboard/quick-actions-bar.tsx`
+
+```tsx
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Plus, Search, MessageSquare, TrendingUp } from "lucide-react";
+import Link from "next/link";
 
 const quickActions = [
   {
-    label: 'Create Campaign',
-    href: '/campaigns/create',
+    label: "Create Campaign",
+    href: "/campaigns/create",
     icon: Plus,
-    variant: 'default' as const
+    variant: "default" as const,
   },
   {
-    label: 'Find Creators',
-    href: '/directory',
+    label: "Find Creators",
+    href: "/directory",
     icon: Search,
-    variant: 'outline' as const
+    variant: "outline" as const,
   },
   {
-    label: 'Start Conversation',
-    href: '/messages',
+    label: "Start Conversation",
+    href: "/messages",
     icon: MessageSquare,
-    variant: 'outline' as const
+    variant: "outline" as const,
   },
   {
-    label: 'View Analytics',
-    href: '/campaigns/affiliate',
+    label: "View Analytics",
+    href: "/campaigns/affiliate",
     icon: TrendingUp,
-    variant: 'outline' as const
-  }
-]
+    variant: "outline" as const,
+  },
+];
 
 export function QuickActionsBar() {
   return (
@@ -564,7 +623,7 @@ export function QuickActionsBar() {
         </Link>
       ))}
     </div>
-  )
+  );
 }
 ```
 
@@ -572,41 +631,51 @@ export function QuickActionsBar() {
 
 ---
 
-## Sprint 4 – Profile & Campaign Management Pages
+### Sprint 4 – Profile & Campaign Management Pages
 
-### 4.1 Company Profile Page
-**File: src/app/(dashboard)/profile/page.tsx**
+#### 4.1 Company Profile Page
+
+**File:** `src/app/(dashboard)/profile/page.tsx`
+
 ```tsx
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { CompanyInfoForm } from '@/components/profile/company-info-form'
-import { ProductsSection } from '@/components/profile/products-section'
-import { BrandAssetsSection } from '@/components/profile/brand-assets-section'
-import { PastCampaignsSection } from '@/components/profile/past-campaigns-section'
-import { PublicProfilePreview } from '@/components/profile/public-profile-preview'
-import { Button } from '@/components/ui/button'
-import { Eye } from 'lucide-react'
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { CompanyInfoForm } from "@/components/profile/company-info-form";
+import { ProductsSection } from "@/components/profile/products-section";
+import { BrandAssetsSection } from "@/components/profile/brand-assets-section";
+import { PastCampaignsSection } from "@/components/profile/past-campaigns-section";
+import { PublicProfilePreview } from "@/components/profile/public-profile-preview";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 
 export default function ProfilePage() {
-  const [showPreview, setShowPreview] = useState(false)
+  const [showPreview, setShowPreview] = useState(false);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Company Profile</h1>
-          <p className="text-gray-600">Manage your brand information and assets</p>
+          <p className="text-gray-600">
+            Manage your brand information and assets
+          </p>
         </div>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           onClick={() => setShowPreview(!showPreview)}
           className="gap-2"
         >
           <Eye className="h-4 w-4" />
-          {showPreview ? 'Edit Profile' : 'Preview Profile'}
+          {showPreview ? "Edit Profile" : "Preview Profile"}
         </Button>
       </div>
 
@@ -639,724 +708,243 @@ export default function ProfilePage() {
         </Tabs>
       )}
     </div>
-  )
+  );
 }
 ```
 
-### 5.2 Creator Grid Component
-**File: src/components/directory/creator-grid.tsx**
+### Sprint 5 – Creator Directory & Messaging System
+
+#### 5.1 Creator Directory Page
+
+**File:** `src/app/(dashboard)/directory/page.tsx`
+
 ```tsx
-'use client'
+"use client";
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { MapPin, Users, Heart, CheckCircle, MessageSquare, Bookmark } from 'lucide-react'
+import { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { CreatorFilters } from "@/components/directory/creator-filters";
+import { CreatorGrid } from "@/components/directory/creator-grid";
+import { CreatorProfileModal } from "@/components/directory/creator-profile-modal";
+import { Search, Filter, Bookmark, Grid, List } from "lucide-react";
 
-interface Creator {
-  id: number
-  name: string
-  username: string
-  platform: string
-  followers: number
-  engagement: number
-  niche: string
-  location: string
-  avatar: string
-  verified: boolean
-  rate: string
-  pastCollaborations: number
-}
-
-interface CreatorGridProps {
-  creators: Creator[]
-  viewMode: 'grid' | 'list'
-  onCreatorSelect: (creator: Creator) => void
-}
-
-export function CreatorGrid({ creators, viewMode, onCreatorSelect }: CreatorGridProps) {
-  const formatFollowers = (count: number) => {
-    if (count >= 1000000) return `${(count / 1000000).toFixed(1)}M`
-    if (count >= 1000) return `${(count / 1000).toFixed(0)}K`
-    return count.toString()
-  }
-
-  const getPlatformColor = (platform: string) => {
-    switch (platform.toLowerCase()) {
-      case 'instagram': return 'bg-pink-100 text-pink-800'
-      case 'tiktok': return 'bg-black text-white'
-      case 'youtube': return 'bg-red-100 text-red-800'
-      case 'twitter': return 'bg-blue-100 text-blue-800'
-      default: return 'bg-gray-100 text-gray-800'
-    }
-  }
-
-  if (viewMode === 'list') {
-    return (
-      <Card>
-        <CardHeader>
-          <h3 className="text-lg font-semibold">Creators</h3>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {creators.map((creator) => (
-              <div
-                key={creator.id}
-                className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => onCreatorSelect(creator)}
-              >
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src={creator.avatar} alt={creator.name} />
-                    <AvatarFallback>{creator.name.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <h4 className="font-medium">{creator.name}</h4>
-                      {creator.verified && <CheckCircle className="h-4 w-4 text-blue-500" />}
-                    </div>
-                    <p className="text-sm text-gray-600">{creator.username}</p>
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
-                      <span className="flex items-center gap-1">
-                        <MapPin className="h-3 w-3" />
-                        {creator.location}
-                      </span>
-                      <Badge variant="secondary" className={getPlatformColor(creator.platform)}>
-                        {creator.platform}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-8">
-                  <div className="text-center">
-                    <div className="font-medium">{formatFollowers(creator.followers)}</div>
-                    <div className="text-sm text-gray-500">Followers</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-medium">{creator.engagement}%</div>
-                    <div className="text-sm text-gray-500">Engagement</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-medium">{creator.rate}</div>
-                    <div className="text-sm text-gray-500">Rate</div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline">
-                      <MessageSquare className="h-4 w-4 mr-1" />
-                      Contact
-                    </Button>
-                    <Button size="sm" variant="ghost">
-                      <Bookmark className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    )
-  }
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {creators.map((creator) => (
-        <Card
-          key={creator.id}
-          className="hover:shadow-lg transition-shadow cursor-pointer"
-          onClick={() => onCreatorSelect(creator)}
-        >
-          <CardHeader className="text-center pb-2">
-            <Avatar className="h-20 w-20 mx-auto mb-3">
-              <AvatarImage src={creator.avatar} alt={creator.name} />
-              <AvatarFallback>{creator.name.charAt(0)}</AvatarFallback>
-            </Avatar>
-            
-            <div className="space-y-1">
-              <div className="flex items-center justify-center gap-2">
-                <h3 className="font-semibold">{creator.name}</h3>
-                {creator.verified && <CheckCircle className="h-4 w-4 text-blue-500" />}
-              </div>
-              <p className="text-sm text-gray-600">{creator.username}</p>
-              <Badge variant="secondary" className={getPlatformColor(creator.platform)}>
-                {creator.platform}
-              </Badge>
-            </div>
-          </CardHeader>
-          
-          <CardContent className="space-y-4">
-            <div className="flex justify-between text-sm">
-              <div className="flex items-center gap-1">
-                <Users className="h-4 w-4 text-gray-400" />
-                <span>{formatFollowers(creator.followers)}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Heart className="h-4 w-4 text-gray-400" />
-                <span>{creator.engagement}%</span>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Niche:</span>
-                <Badge variant="outline">{creator.niche}</Badge>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Rate:</span>
-                <span className="text-sm font-medium">{creator.rate}</span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600">Collaborations:</span>
-                <span className="text-sm">{creator.pastCollaborations}</span>
-              </div>
-            </div>
-            
-            <div className="flex gap-2">
-              <Button size="sm" className="flex-1">
-                <MessageSquare className="h-4 w-4 mr-1" />
-                Contact
-              </Button>
-              <Button size="sm" variant="outline">
-                <Bookmark className="h-4 w-4" />
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  )
-}
-```
-
-### 5.3 Messaging System
-**File: src/app/(dashboard)/messages/page.tsx**
-```tsx
-'use client'
-
-import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { MessagesList } from '@/components/messages/messages-list'
-import { ConversationView } from '@/components/messages/conversation-view'
-import { Search, Filter, Edit } from 'lucide-react'
-
-const mockConversations = [
+const mockCreators = [
   {
     id: 1,
-    participant: {
-      name: 'Sarah Johnson',
-      username: '@sarah_style',
-      avatar: '/api/placeholder/40/40',
-      platform: 'Instagram'
+    name: "Sarah Johnson",
+    username: "@sarah_style",
+    platform: "Instagram",
+    followers: 125000,
+    engagement: 4.2,
+    niche: "Fashion",
+    location: "New York, NY",
+    avatar: "/api/placeholder/80/80",
+    verified: true,
+    rate: "$500-800",
+    pastCollaborations: 45,
+    audience: {
+      ageGroups: { "18-24": 35, "25-34": 45, "35-44": 20 },
+      genderSplit: { female: 78, male: 22 },
+      topCountries: ["US", "Canada", "UK"],
     },
-    lastMessage: {
-      text: "I'd love to collaborate on your summer campaign!",
-      timestamp: new Date('2024-06-20T14:30:00'),
-      isRead: false,
-      sender: 'creator'
-    },
-    campaignTag: 'Summer Collection 2024',
-    isOnline: true,
-    unreadCount: 2
   },
   {
     id: 2,
-    participant: {
-      name: 'Mike Chen',
-      username: '@mikefitness',
-      avatar: '/api/placeholder/40/40',
-      platform: 'TikTok'
+    name: "Mike Chen",
+    username: "@mikefitness",
+    platform: "TikTok",
+    followers: 89000,
+    engagement: 6.8,
+    niche: "Fitness",
+    location: "Los Angeles, CA",
+    avatar: "/api/placeholder/80/80",
+    verified: false,
+    rate: "$300-500",
+    pastCollaborations: 28,
+    audience: {
+      ageGroups: { "18-24": 55, "25-34": 30, "35-44": 15 },
+      genderSplit: { female: 45, male: 55 },
+      topCountries: ["US", "Mexico", "Canada"],
     },
-    lastMessage: {
-      text: 'Thanks for approving my application. When do we start?',
-      timestamp: new Date('2024-06-19T16:45:00'),
-      isRead: true,
-      sender: 'creator'
-    },
-    campaignTag: 'Fitness Challenge',
-    isOnline: false,
-    unreadCount: 0
   },
   {
     id: 3,
-    participant: {
-      name: 'Emma Wilson',
-      username: '@emmaeats',
-      avatar: '/api/placeholder/40/40',
-      platform: 'YouTube'
+    name: "Emma Wilson",
+    username: "@emmaeats",
+    platform: "YouTube",
+    followers: 234000,
+    engagement: 3.1,
+    niche: "Food & Cooking",
+    location: "Austin, TX",
+    avatar: "/api/placeholder/80/80",
+    verified: true,
+    rate: "$800-1200",
+    pastCollaborations: 67,
+    audience: {
+      ageGroups: { "25-34": 40, "35-44": 35, "45-54": 25 },
+      genderSplit: { female: 68, male: 32 },
+      topCountries: ["US", "Canada", "Australia"],
     },
-    lastMessage: {
-      text: 'The content is ready for review. Check your email!',
-      timestamp: new Date('2024-06-18T10:15:00'),
-      isRead: true,
-      sender: 'creator'
-    },
-    campaignTag: 'Holiday Recipes',
-    isOnline: true,
-    unreadCount: 0
-  }
-]
+  },
+];
 
-const mockMessages = {
-  1: [
-    {
-      id: 1,
-      text: "Hi! I'm really interested in your Summer Collection campaign. I love the aesthetic and think it would be perfect for my audience.",
-      timestamp: new Date('2024-06-20T14:00:00'),
-      sender: 'creator',
-      isRead: true
-    },
-    {
-      id: 2,
-      text: "Thank you for your interest! I've reviewed your profile and I'm impressed with your engagement rates. What's your typical rate for a feed post + story series?",
-      timestamp: new Date('2024-06-20T14:15:00'),
-      sender: 'brand',
-      isRead: true
-    },
-    {
-      id: 3,
-      text: "For a campaign like this, I typically charge $500 for a feed post and story series. I can also include a reel for an additional $200. All content includes usage rights for 6 months.",
-      timestamp: new Date('2024-06-20T14:25:00'),
-      sender: 'creator',
-      isRead: true
-    },
-    {
-      id: 4,
-      text: "I'd love to collaborate on your summer campaign!",
-      timestamp: new Date('2024-06-20T14:30:00'),
-      sender: 'creator',
-      isRead: false
-    }
-  ]
-}
+export default function DirectoryPage() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [selectedCreator, setSelectedCreator] = useState<any>(null);
+  const [filters, setFilters] = useState({
+    platform: "",
+    niche: "",
+    followers: "",
+    engagement: "",
+    location: "",
+    verified: false,
+  });
 
-export default function MessagesPage() {
-  const [selectedConversation, setSelectedConversation] = useState<number>(1)
-  const [searchTerm, setSearchTerm] = useState('')
+  const filteredCreators = mockCreators.filter((creator) => {
+    const matchesSearch =
+      creator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      creator.username.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesPlatform =
+      !filters.platform || creator.platform === filters.platform;
+    const matchesNiche = !filters.niche || creator.niche === filters.niche;
+    const matchesVerified =
+      !filters.verified || creator.verified === filters.verified;
 
-  const filteredConversations = mockConversations.filter(conv =>
-    conv.participant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    conv.participant.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    conv.campaignTag.toLowerCase().includes(searchTerm.toLowerCase())
-  )
-
-  const selectedConv = mockConversations.find(c => c.id === selectedConversation)
-  const messages = mockMessages[selectedConversation as keyof typeof mockMessages] || []
+    return matchesSearch && matchesPlatform && matchesNiche && matchesVerified;
+  });
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Messages</h1>
-          <p className="text-gray-600">Communicate with creators and manage partnerships</p>
+          <h1 className="text-3xl font-bold text-gray-900">
+            Creator Directory
+          </h1>
+          <p className="text-gray-600">
+            Discover and connect with content creators
+          </p>
         </div>
-        <Button className="gap-2">
-          <Edit className="h-4 w-4" />
-          New Message
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button variant="outline" size="icon">
+            <Bookmark className="h-4 w-4" />
+          </Button>
+          <div className="flex rounded-lg border">
+            <Button
+              variant={viewMode === "grid" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("grid")}
+            >
+              <Grid className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("list")}
+            >
+              <List className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-[700px]">
-        {/* Conversations List */}
-        <Card className="lg:col-span-1">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              <span>Conversations</span>
-              <Badge variant="secondary">
-                {filteredConversations.filter(c => c.unreadCount > 0).length} unread
-              </Badge>
-            </CardTitle>
-            <div className="relative">
+      <Card>
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Search & Filter</CardTitle>
+              <CardDescription>
+                Find creators that match your campaign needs
+              </CardDescription>
+            </div>
+            <Badge variant="outline">
+              {filteredCreators.length} creators found
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-4">
+            <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
               <Input
-                placeholder="Search conversations..."
+                placeholder="Search by name, username, or hashtags..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
               />
             </div>
-          </CardHeader>
-          <CardContent className="p-0">
-            <MessagesList
-              conversations={filteredConversations}
-              selectedId={selectedConversation}
-              onSelect={setSelectedConversation}
-            />
-          </CardContent>
-        </Card>
-
-        {/* Conversation View */}
-        <Card className="lg:col-span-2">
-          {selectedConv ? (
-            <ConversationView
-              conversation={selectedConv}
-              messages={messages}
-            />
-          ) : (
-            <CardContent className="flex items-center justify-center h-full">
-              <div className="text-center text-gray-500">
-                <p>Select a conversation to start messaging</p>
-              </div>
-            </CardContent>
-          )}
-        </Card>
-      </div>
-    </div>
-  )
-}
-```
-
-### 5.4 Messages List Component
-**File: src/components/messages/messages-list.tsx**
-```tsx
-'use client'
-
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Badge } from '@/components/ui/badge'
-import { cn } from '@/lib/utils'
-import { formatDistanceToNow } from 'date-fns'
-
-interface Conversation {
-  id: number
-  participant: {
-    name: string
-    username: string
-    avatar: string
-    platform: string
-  }
-  lastMessage: {
-    text: string
-    timestamp: Date
-    isRead: boolean
-    sender: 'creator' | 'brand'
-  }
-  campaignTag: string
-  isOnline: boolean
-  unreadCount: number
-}
-
-interface MessagesListProps {
-  conversations: Conversation[]
-  selectedId: number
-  onSelect: (id: number) => void
-}
-
-export function MessagesList({ conversations, selectedId, onSelect }: MessagesListProps) {
-  return (
-    <div className="divide-y">
-      {conversations.map((conversation) => (
-        <div
-          key={conversation.id}
-          className={cn(
-            "p-4 cursor-pointer hover:bg-gray-50 transition-colors",
-            selectedId === conversation.id && "bg-blue-50 border-r-2 border-blue-500"
-          )}
-          onClick={() => onSelect(conversation.id)}
-        >
-          <div className="flex items-start gap-3">
-            <div className="relative">
-              <Avatar className="h-12 w-12">
-                <AvatarImage src={conversation.participant.avatar} alt={conversation.participant.name} />
-                <AvatarFallback>{conversation.participant.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              {conversation.isOnline && (
-                <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-green-500 border-2 border-white rounded-full" />
-              )}
-            </div>
-
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between mb-1">
-                <h4 className={cn(
-                  "text-sm font-medium truncate",
-                  !conversation.lastMessage.isRead && conversation.lastMessage.sender === 'creator' && "font-bold"
-                )}>
-                  {conversation.participant.name}
-                </h4>
-                <div className="flex items-center gap-2">
-                  {conversation.unreadCount > 0 && (
-                    <Badge variant="default" className="h-5 w-5 flex items-center justify-center p-0 text-xs">
-                      {conversation.unreadCount}
-                    </Badge>
-                  )}
-                  <span className="text-xs text-gray-500">
-                    {formatDistanceToNow(conversation.lastMessage.timestamp, { addSuffix: true })}
-                  </span>
-                </div>
-              </div>
-
-              <p className="text-sm text-gray-600 mb-1">{conversation.participant.username}</p>
-              
-              <p className={cn(
-                "text-sm text-gray-500 truncate",
-                !conversation.lastMessage.isRead && conversation.lastMessage.sender === 'creator' && "font-medium text-gray-700"
-              )}>
-                {conversation.lastMessage.text}
-              </p>
-
-              <div className="flex items-center justify-between mt-2">
-                <Badge variant="outline" className="text-xs">
-                  {conversation.campaignTag}
-                </Badge>
-                <Badge variant="secondary" className="text-xs">
-                  {conversation.participant.platform}
-                </Badge>
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
-```
-
-### 5.5 Conversation View Component
-**File: src/components/messages/conversation-view.tsx**
-```tsx
-'use client'
-
-import { useState, useRef, useEffect } from 'react'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
-import { CardContent, CardHeader } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
-import { formatDistanceToNow } from 'date-fns'
-import { Send, Paperclip, Smile, MoreVertical, Phone, Video } from 'lucide-react'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
-interface Message {
-  id: number
-  text: string
-  timestamp: Date
-  sender: 'creator' | 'brand'
-  isRead: boolean
-}
-
-interface Conversation {
-  id: number
-  participant: {
-    name: string
-    username: string
-    avatar: string
-    platform: string
-  }
-  campaignTag: string
-  isOnline: boolean
-}
-
-interface ConversationViewProps {
-  conversation: Conversation
-  messages: Message[]
-}
-
-export function ConversationView({ conversation, messages }: ConversationViewProps) {
-  const [newMessage, setNewMessage] = useState('')
-  const [isTyping, setIsTyping] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
-  const handleSendMessage = () => {
-    if (newMessage.trim()) {
-      // Mock sending message
-      console.log('Sending message:', newMessage)
-      setNewMessage('')
-    }
-  }
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
-    }
-  }
-
-  // Simulate typing indicator
-  useEffect(() => {
-    if (messages.length > 0) {
-      const timer = setTimeout(() => setIsTyping(false), 3000)
-      return () => clearTimeout(timer)
-    }
-  }, [messages])
-
-  return (
-    <>
-      {/* Conversation Header */}
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 border-b">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src={conversation.participant.avatar} alt={conversation.participant.name} />
-              <AvatarFallback>{conversation.participant.name.charAt(0)}</AvatarFallback>
-            </Avatar>
-            {conversation.isOnline && (
-              <div className="absolute -bottom-1 -right-1 h-3 w-3 bg-green-500 border-2 border-white rounded-full" />
-            )}
-          </div>
-          <div>
-            <h3 className="font-semibold">{conversation.participant.name}</h3>
-            <div className="flex items-center gap-2">
-              <p className="text-sm text-gray-600">{conversation.participant.username}</p>
-              <Badge variant="secondary" className="text-xs">{conversation.participant.platform}</Badge>
-            </div>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <Badge variant="outline">{conversation.campaignTag}</Badge>
-          <Button variant="outline" size="sm">
-            <Phone className="h-4 w-4" />
-          </Button>
-          <Button variant="outline" size="sm">
-            <Video className="h-4 w-4" />
-          </Button>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>View Profile</DropdownMenuItem>
-              <DropdownMenuItem>Archive Conversation</DropdownMenuItem>
-              <DropdownMenuItem>Block User</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </CardHeader>
-
-      {/* Messages */}
-      <CardContent className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={cn(
-              "flex gap-3",
-              message.sender === 'brand' ? "justify-end" : "justify-start"
-            )}
-          >
-            {message.sender === 'creator' && (
-              <Avatar className="h-8 w-8 mt-1">
-                <AvatarImage src={conversation.participant.avatar} alt={conversation.participant.name} />
-                <AvatarFallback>{conversation.participant.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-            )}
-            
-            <div className={cn(
-              "max-w-xs lg:max-w-md px-4 py-2 rounded-lg",
-              message.sender === 'brand'
-                ? "bg-blue-500 text-white rounded-br-none"
-                : "bg-gray-100 text-gray-900 rounded-bl-none"
-            )}>
-              <p className="text-sm">{message.text}</p>
-              <p className={cn(
-                "text-xs mt-1",
-                message.sender === 'brand' ? "text-blue-100" : "text-gray-500"
-              )}>
-                {formatDistanceToNow(message.timestamp, { addSuffix: true })}
-              </p>
-            </div>
-            
-            {message.sender === 'brand' && (
-              <div className="h-8 w-8 mt-1" /> // Spacer for alignment
-            )}
-          </div>
-        ))}
-        
-        {/* Typing Indicator */}
-        {isTyping && (
-          <div className="flex gap-3">
-            <Avatar className="h-8 w-8 mt-1">
-              <AvatarImage src={conversation.participant.avatar} alt={conversation.participant.name} />
-              <AvatarFallback>{conversation.participant.name.charAt(0)}</AvatarFallback>
-            </Avatar>
-            <div className="bg-gray-100 px-4 py-2 rounded-lg rounded-bl-none">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        <div ref={messagesEndRef} />
-      </CardContent>
-
-      {/* Message Input */}
-      <div className="border-t p-4">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm">
-            <Paperclip className="h-4 w-4" />
-          </Button>
-          <div className="flex-1 relative">
-            <Input
-              placeholder="Type your message..."
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              className="pr-10"
-            />
             <Button
-              variant="ghost"
-              size="sm"
-              className="absolute right-1 top-1/2 transform -translate-y-1/2"
+              variant="outline"
+              onClick={() => setShowFilters(!showFilters)}
+              className="gap-2"
             >
-              <Smile className="h-4 w-4" />
+              <Filter className="h-4 w-4" />
+              Filters
             </Button>
           </div>
-          <Button onClick={handleSendMessage} disabled={!newMessage.trim()}>
-            <Send className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-    </>
-  )
+
+          {showFilters && (
+            <div className="mt-4 pt-4 border-t">
+              <CreatorFilters filters={filters} setFilters={setFilters} />
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <CreatorGrid
+        creators={filteredCreators}
+        viewMode={viewMode}
+        onCreatorSelect={setSelectedCreator}
+      />
+
+      {selectedCreator && (
+        <CreatorProfileModal
+          creator={selectedCreator}
+          isOpen={!!selectedCreator}
+          onClose={() => setSelectedCreator(null)}
+        />
+      )}
+    </div>
+  );
 }
 ```
 
 **Cursor.ai Context:** Build a comprehensive creator directory with advanced filtering and a fully functional messaging system with real-time UI features, typing indicators, and professional conversation management.
 
----
+### Sprint 6 – Settings & UI Polish
 
-## Sprint 6 – Settings & UI Polish
+#### 6.1 Settings Page with Tabs
 
-### 6.1 Settings Page with Tabs
-**File: src/app/(dashboard)/settings/page.tsx**
+**File:** `src/app/(dashboard)/settings/page.tsx`
+
 ```tsx
-'use client'
+"use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { AccountSettings } from '@/components/settings/account-settings'
-import { NotificationSettings } from '@/components/settings/notification-settings'
-import { BillingSettings } from '@/components/settings/billing-settings'
-import { SecuritySettings } from '@/components/settings/security-settings'
-import { IntegrationsSettings } from '@/components/settings/integrations-settings'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AccountSettings } from "@/components/settings/account-settings";
+import { NotificationSettings } from "@/components/settings/notification-settings";
+import { BillingSettings } from "@/components/settings/billing-settings";
+import { SecuritySettings } from "@/components/settings/security-settings";
+import { IntegrationsSettings } from "@/components/settings/integrations-settings";
 
 export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
-        <p className="text-gray-600">Manage your account preferences and configuration</p>
+        <p className="text-gray-600">
+          Manage your account preferences and configuration
+        </p>
       </div>
 
       <Tabs defaultValue="account" className="space-y-6">
@@ -1389,23 +977,25 @@ export default function SettingsPage() {
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
 ```
 
-### 6.2 Responsive Design Implementation
-**File: src/components/dashboard/mobile-sidebar.tsx**
-```tsx
-'use client'
+#### 6.2 Responsive Design Implementation
 
-import { useState } from 'react'
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
-import { DashboardSidebar } from './sidebar'
-import { Menu } from 'lucide-react'
+**File:** `src/components/dashboard/mobile-sidebar.tsx`
+
+```tsx
+"use client";
+
+import { useState } from "react";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { DashboardSidebar } from "./sidebar";
+import { Menu } from "lucide-react";
 
 export function MobileSidebar() {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -1418,41 +1008,44 @@ export function MobileSidebar() {
         <DashboardSidebar />
       </SheetContent>
     </Sheet>
-  )
+  );
 }
 ```
 
-### 6.3 Dark/Light Theme Implementation
-**File: src/components/theme-provider.tsx**
-```tsx
-'use client'
+#### 6.3 Dark/Light Theme Implementation
 
-import * as React from 'react'
-import { ThemeProvider as NextThemesProvider } from 'next-themes'
-import { type ThemeProviderProps } from 'next-themes/dist/types'
+**File:** `src/components/theme-provider.tsx`
+
+```tsx
+"use client";
+
+import * as React from "react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { type ThemeProviderProps } from "next-themes/dist/types";
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>
+  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
 ```
 
-**File: src/components/theme-toggle.tsx**
-```tsx
-'use client'
+**File:** `src/components/theme-toggle.tsx`
 
-import * as React from 'react'
-import { Moon, Sun } from 'lucide-react'
-import { useTheme } from 'next-themes'
-import { Button } from '@/components/ui/button'
+```tsx
+"use client";
+
+import * as React from "react";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+} from "@/components/ui/dropdown-menu";
 
 export function ThemeToggle() {
-  const { setTheme } = useTheme()
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -1464,43 +1057,45 @@ export function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('light')}>
+        <DropdownMenuItem onClick={() => setTheme("light")}>
           Light
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')}>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')}>
+        <DropdownMenuItem onClick={() => setTheme("system")}>
           System
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
 ```
 
-### 6.4 Page Transitions with Framer Motion
-**File: src/components/page-transition.tsx**
-```tsx
-'use client'
+#### 6.4 Page Transitions with Framer Motion
 
-import { motion } from 'framer-motion'
+**File:** `src/components/page-transition.tsx`
+
+```tsx
+"use client";
+
+import { motion } from "framer-motion";
 
 interface PageTransitionProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 const pageVariants = {
   initial: { opacity: 0, y: 20 },
   in: { opacity: 1, y: 0 },
-  out: { opacity: 0, y: -20 }
-}
+  out: { opacity: 0, y: -20 },
+};
 
 const pageTransition = {
-  type: 'tween',
-  ease: 'anticipate',
-  duration: 0.4
-}
+  type: "tween",
+  ease: "anticipate",
+  duration: 0.4,
+};
 
 export function PageTransition({ children }: PageTransitionProps) {
   return (
@@ -1513,234 +1108,22 @@ export function PageTransition({ children }: PageTransitionProps) {
     >
       {children}
     </motion.div>
-  )
+  );
 }
 ```
 
 **Cursor.ai Context:** Complete the frontend phase with comprehensive settings, responsive design, theming, and smooth animations. This establishes a solid foundation before moving to backend integration.
 
-### 4.2 Company Info Form Component
-**File: src/components/profile/company-info-form.tsx**
-```tsx
-'use client'
+## Summary
 
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+This Frontend PRD outlines the complete development of a Partner Dashboard for managing creator partnerships and campaigns. The implementation includes:
 
-const mockCompanyData = {
-  name: 'TechStyle Fashion',
-  website: 'https://techstylefashion.com',
-  industry: 'Fashion & Apparel',
-  size: '51-200',
-  description: 'Leading fashion brand focused on sustainable and trendy apparel for young professionals.',
-  headquarters: 'New York, NY',
-  founded: '2018'
-}
+- **Modern Tech Stack**: Next.js 15, TypeScript, TailwindCSS, shadcn/ui
+- **Comprehensive UI Components**: Dashboard cards, forms, tables, messaging system
+- **Responsive Design**: Mobile-first approach with adaptive layouts
+- **Theme Support**: Light/dark mode with smooth transitions
+- **Mock Data Integration**: Realistic data structures for development and testing
+- **Component Architecture**: Reusable, maintainable React components
+- **User Experience**: Intuitive navigation, search, filtering, and real-time features
 
-export function CompanyInfoForm() {
-  const [formData, setFormData] = useState(mockCompanyData)
-
-  const handleSave = () => {
-    // Mock save functionality
-    console.log('Saving company info:', formData)
-  }
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Company Information</CardTitle>
-        <CardDescription>
-          Update your company details that will be visible to creators
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="company-name">Company Name</Label>
-            <Input
-              id="company-name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="website">Website</Label>
-            <Input
-              id="website"
-              type="url"
-              value={formData.website}
-              onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="industry">Industry</Label>
-            <Select value={formData.industry} onValueChange={(value) => setFormData({ ...formData, industry: value })}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Fashion & Apparel">Fashion & Apparel</SelectItem>
-                <SelectItem value="Technology">Technology</SelectItem>
-                <SelectItem value="Beauty & Cosmetics">Beauty & Cosmetics</SelectItem>
-                <SelectItem value="Food & Beverage">Food & Beverage</SelectItem>
-                <SelectItem value="Health & Fitness">Health & Fitness</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="company-size">Company Size</Label>
-            <Select value={formData.size} onValueChange={(value) => setFormData({ ...formData, size: value })}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1-10">1-10 employees</SelectItem>
-                <SelectItem value="11-50">11-50 employees</SelectItem>
-                <SelectItem value="51-200">51-200 employees</SelectItem>
-                <SelectItem value="201-1000">201-1000 employees</SelectItem>
-                <SelectItem value="1000+">1000+ employees</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="description">Company Description</Label>
-          <Textarea
-            id="description"
-            rows={4}
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-            placeholder="Tell creators about your company, mission, and what makes you unique..."
-          />
-        </div>
-
-        <div className="flex justify-end">
-          <Button onClick={handleSave}>Save Changes</Button>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-```
-
-### 4.3 Campaign Creation Multi-Step Form
-**File: src/app/(dashboard)/campaigns/create/page.tsx**
-```tsx
-'use client'
-
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
-import { ChevronLeft, ChevronRight } from 'lucide-react'
-import { CampaignBasicsStep } from '@/components/campaigns/create/campaign-basics-step'
-import { RequirementsStep } from '@/components/campaigns/create/requirements-step'
-import { CompensationStep } from '@/components/campaigns/create/compensation-step'
-import { CriteriaStep } from '@/components/campaigns/create/criteria-step'
-import { DeliverablesStep } from '@/components/campaigns/create/deliverables-step'
-import { TimelineStep } from '@/components/campaigns/create/timeline-step'
-import { ReviewStep } from '@/components/campaigns/create/review-step'
-
-const steps = [
-  { id: 1, title: 'Campaign Basics', component: CampaignBasicsStep },
-  { id: 2, title: 'Requirements', component: RequirementsStep },
-  { id: 3, title: 'Compensation', component: CompensationStep },
-  { id: 4, title: 'Creator Criteria', component: CriteriaStep },
-  { id: 5, title: 'Deliverables', component: DeliverablesStep },
-  { id: 6, title: 'Timeline', component: TimelineStep },
-  { id: 7, title: 'Review & Launch', component: ReviewStep }
-]
-
-export default function CreateCampaignPage() {
-  const [currentStep, setCurrentStep] = useState(1)
-  const [campaignData, setCampaignData] = useState({
-    basics: {},
-    requirements: {},
-    compensation: {},
-    criteria: {},
-    deliverables: {},
-    timeline: {},
-  })
-
-  const currentStepData = steps.find(step => step.id === currentStep)
-  const CurrentStepComponent = currentStepData?.component
-
-  const handleNext = () => {
-    if (currentStep < steps.length) {
-      setCurrentStep(currentStep + 1)
-    }
-  }
-
-  const handlePrevious = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
-    }
-  }
-
-  const updateCampaignData = (stepKey: string, data: any) => {
-    setCampaignData(prev => ({
-      ...prev,
-      [stepKey]: { ...prev[stepKey as keyof typeof prev], ...data }
-    }))
-  }
-
-  const progress = (currentStep / steps.length) * 100
-
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900">Create New Campaign</h1>
-        <p className="text-gray-600">Set up your creator partnership campaign</p>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>Step {currentStep} of {steps.length}</CardTitle>
-              <CardDescription>{currentStepData?.title}</CardDescription>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              {Math.round(progress)}% Complete
-            </div>
-          </div>
-          <Progress value={progress} className="mt-4" />
-        </CardHeader>
-        
-        <CardContent className="space-y-6">
-          {CurrentStepComponent && (
-            <CurrentStepComponent
-              data={campaignData}
-              updateData={updateCampaignData}
-            />
-          )}
-          
-          <div className="flex justify-between pt-6">
-            <Button 
-              variant="outline" 
-              onClick={handlePrevious}
-              disabled={currentStep === 1}
-              className="gap-2"
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Previous
-            </Button>
-            
-            <Button 
-              onClick={handleNext}
-              disabled={currentStep === steps.length}
-              className="gap-2"
-            >
-              {currentStep === steps.length ? 'Launch Campaign' : 'Next'}
-              {currentStep < steps.length && <ChevronRight className="h-4 w-4" />}
-            </Button>
-          </div>
+The frontend provides a solid foundation for the partner dashboard, with all major features implemented using mock data to demonstrate functionality before backend integration.
